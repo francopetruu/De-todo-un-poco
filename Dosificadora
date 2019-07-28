@@ -1,0 +1,60 @@
+def solocemento(fARENA,aguacemento,dc,fSP,dsp):
+	Vc=(1-fARENA)/(aguacemento*dc+1)
+	Vw=(aguacemento*dc)*Vc
+	SP=((Vc*fSP)/100)*dsp
+	return Vc , Vw, SP
+	
+
+def cenizavolante(fARENA,aguacemento,dc,fCV,dcv,fSP,dsp):
+	R=fCV/(1-fCV)
+	Vc=(1-fARENA)/(aguacemento*dc+aguacemento*R*dcv+1+R)
+	Vcv=R*Vc
+	Vw=aguacemento*(dc*Vc+dcv*Vcv)
+	SP=((Vc+Vcv)*fSP/100)*dsp
+	return Vc , Vw, Vcv , SP
+
+print("Calculadora de dosificación para morteros autocompactantes con o sin agregado de ceniza volante")
+print()
+waterpowder=float(input("Ingrese la relación agua/cemento en masa requerida: ",))
+contceniza=float(input("Ingrese la fracción de reemplazo de ceniza volante (0-1): ", ))
+contarena=float(input("Ingrese el contenido de arena como fracción del volumen de mortero total: ", ))
+aditivo=float(input("Ingrese la concentración de aditivo super fluidificante en litros/100kg polvo total: ", ))
+paston=float(input("Ingrese el volumen en litros de su pastón de prueba: ", ))
+print()
+print("Características de los agregados y aditivos :")
+darena=float(input("Ingrese la densidad de la arena en g/cm3: ", ))
+dcemento=float(input("Ingrese la densidad del cemento en g/cm3: ", ))
+dfluid=float(input("Ingrese la densidad del aditivo en g/cm3: ", ))
+
+if contceniza==0:
+	Vcemento, Vwater, Superflu=solocemento(contarena, waterpowder, dcemento, aditivo, dfluid)
+	print("La dosificación en kg por m3 de mortero es: ")
+	print("Cemento: ", round(Vcemento*1000*dcemento, 2))
+	print("Agua: ", round(Vwater*1000, 2))
+	print("Arena: ", round(contarena*1000*darena, 2))
+	print("SP: ", round(Superflu, 2))
+	print()
+	print("La dosificación en kg cada ", paston, "litros de mortero es: ")
+	print("Cemento: ", round(Vcemento*dcemento*paston, 4))
+	print("Agua: ", round(Vwater*paston, 4))
+	print("Arena: ", round(contarena*darena*paston, 4))
+	print("SP: ", round(Superflu*(paston/1000), 4))
+elif 0<contceniza<=1:
+	dceniza=float(input("Ingrese la densidad de la ceniza en g/cm3: ", ))
+	Vcemento, Vwater, Vceniza, Superflu=cenizavolante(contarena, waterpowder, dcemento, contceniza, dceniza, aditivo, dfluid)
+	print("La dosificación en kg por m3 de mortero es: ")
+	print("Cemento: ", round(Vcemento*1000*dcemento, 2))
+	print("Ceniza: ", round(Vceniza*1000*dceniza, 2))
+	print("Agua: ", round(Vwater*1000, 2))
+	print("Arena: ", round(contarena*1000*darena, 2))
+	print("SP: ", round(Superflu, 2))
+	print()
+	print("La dosificación en kg cada ", paston, "litros de mortero es: ")
+	print("Cemento: ", round(Vcemento*dcemento*paston, 4))
+	print("Ceniza: ", round(Vceniza*dceniza*paston, 4))
+	print("Agua: ", round(Vwater*paston, 4))
+	print("Arena: ", round(contarena*darena*paston, 4))
+	print("SP: ", round(Superflu*(paston/1000), 4))
+else:
+	print("El valor ingresado no se encuentra en el rango entre 0 y 1")
+
