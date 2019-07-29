@@ -1,7 +1,7 @@
 def solocemento(fARENA,aguacemento,dc,fSP,dsp):
 	Vc=(1-fARENA)/(aguacemento*dc+1)
 	Vw=(aguacemento*dc)*Vc
-	SP=((Vc*fSP)/100)*dsp
+	SP=((Vc*dc*fSP)/100)*dsp
 	return Vc , Vw, SP
 	
 
@@ -10,7 +10,7 @@ def cenizavolante(fARENA,aguacemento,dc,fCV,dcv,fSP,dsp):
 	Vc=(1-fARENA)/(aguacemento*dc+aguacemento*R*dcv+1+R)
 	Vcv=R*Vc
 	Vw=aguacemento*(dc*Vc+dcv*Vcv)
-	SP=((Vc+Vcv)*fSP/100)*dsp
+	SP=((Vc*dc+Vcv*dcv)*fSP/100)*dsp
 	return Vc , Vw, Vcv , SP
 
 print("Calculadora de dosificación para morteros autocompactantes con o sin agregado de ceniza volante")
@@ -28,33 +28,32 @@ dfluid=float(input("Ingrese la densidad del aditivo en g/cm3: ", ))
 
 if contceniza==0:
 	Vcemento, Vwater, Superflu=solocemento(contarena, waterpowder, dcemento, aditivo, dfluid)
-	print("La dosificación en kg por m3 de mortero es: ")
-	print("Cemento: ", round(Vcemento*1000*dcemento, 2))
-	print("Agua: ", round(Vwater*1000, 2))
-	print("Arena: ", round(contarena*1000*darena, 2))
-	print("SP: ", round(Superflu, 2))
+	print("""La dosificación en kg por m3 de mortero es: 
+	Cemento: {} 
+	Agua: {} 
+	Arena: {} 
+	SP: {} """.format(round(Vcemento*1000*dcemento, 2), round(Vwater*1000, 2), round(contarena*1000*darena, 2), round(Superflu*1000,2)))
 	print()
-	print("La dosificación en kg cada ", paston, "litros de mortero es: ")
-	print("Cemento: ", round(Vcemento*dcemento*paston, 4))
-	print("Agua: ", round(Vwater*paston, 4))
-	print("Arena: ", round(contarena*darena*paston, 4))
-	print("SP: ", round(Superflu*(paston/1000), 4))
+	print("""La dosificación en kg cada {} litros de mortero es: 
+	Cemento: {}
+	Agua: {}
+	Arena: {}
+	SP: {} """.format(paston, round(Vcemento*dcemento*paston, 4),round(Vwater*paston, 4), round(contarena*darena*paston, 4), round(Superflu*paston,4)))
 elif 0<contceniza<=1:
 	dceniza=float(input("Ingrese la densidad de la ceniza en g/cm3: ", ))
 	Vcemento, Vwater, Vceniza, Superflu=cenizavolante(contarena, waterpowder, dcemento, contceniza, dceniza, aditivo, dfluid)
-	print("La dosificación en kg por m3 de mortero es: ")
-	print("Cemento: ", round(Vcemento*1000*dcemento, 2))
-	print("Ceniza: ", round(Vceniza*1000*dceniza, 2))
-	print("Agua: ", round(Vwater*1000, 2))
-	print("Arena: ", round(contarena*1000*darena, 2))
-	print("SP: ", round(Superflu, 2))
+	print("""La dosificación en kg por m3 de mortero es: ")
+	Cemento: {}
+	Ceniza: {}
+	Agua: {}
+	Arena: {}
+	SP: {} """.format(round(contarena*darena*paston, 4), round(Vceniza*1000*dceniza, 2), round(Vwater*1000, 2), round(contarena*1000*darena, 2), round(Superflu*1000,2)))
 	print()
-	print("La dosificación en kg cada ", paston, "litros de mortero es: ")
-	print("Cemento: ", round(Vcemento*dcemento*paston, 4))
-	print("Ceniza: ", round(Vceniza*dceniza*paston, 4))
-	print("Agua: ", round(Vwater*paston, 4))
-	print("Arena: ", round(contarena*darena*paston, 4))
-	print("SP: ", round(Superflu*(paston/1000), 4))
+	print("""La dosificación en kg cada {} litros de mortero es:
+	Cemento: {} )
+	Ceniza: {} )
+	Agua: {} )
+	Arena: {} )
+	SP: {}""".format(round(Vcemento*dcemento*paston, 4), round(Vceniza*dceniza*paston, 4), round(Vwater*paston, 4), round(contarena*darena*paston, 4), round(Superflu*paston,4)))
 else:
 	print("El valor ingresado no se encuentra en el rango entre 0 y 1")
-
